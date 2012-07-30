@@ -3,7 +3,8 @@ require "jquery-timepicker-rails/version"
 module Jquery
   module Timepicker
     module Rails
-      # Your code goes here...
+      class Engine < ::Rails::Engine
+      end
     end
   end
 end
