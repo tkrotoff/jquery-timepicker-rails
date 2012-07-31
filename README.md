@@ -19,15 +19,21 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Add the following JavaScript file to `app/assets/javascripts/application.js`:
 
-## Contributing
+    //= require jquery.timepicker.js
 
-1. Fork it
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Added some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
+Add the following stylesheet file to `app/assets/stylesheets/application.css`:
+
+    *= require jquery.timepicker.css
+
+Optionally, you can also use `datepair.js`:
+
+    //= require datepair.js
+
+Most people will prefer to copy-paste this file in order to customize it.
+
+jquery-timepicker depends on jQuery and [bootstrap-datepicker](http://github.com/eternicode/bootstrap-datepicker) or [jQuery UI Datepicker](http://jqueryui.com/demos/datepicker/).
 
 ## License
 
