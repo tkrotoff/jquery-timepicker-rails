@@ -1,6 +1,7 @@
-# Jquery::Timepicker::Rails
+# jQuery timepicker for Rails
 
-TODO: Write a gem description
+jquery-timepicker packaged for the Rails 3.1+ asset pipeline.
+Check [jquery-timepicker project home page](http://github.com/jonthornton/jquery-timepicker).
 
 ## Installation
 
@@ -27,3 +28,9 @@ TODO: Write usage instructions here
 3. Commit your changes (`git commit -am 'Added some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
+
+## License
+
+jquery-timepicker is being developed by [Jon Thornton](http://jonthornton.com/) and is under [MIT license](http://en.wikipedia.org/wiki/MIT_License).
+
+This gem is also licensed under [MIT license](https://raw.github.com/tkrotoff/jquery-timepicker-rails/master/LICENSE).
