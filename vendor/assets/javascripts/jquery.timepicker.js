@@ -17,7 +17,6 @@ requires jQuery 1.7+
 }(function ($) {
 	var _baseDate = _generateBaseDate();
 	var _ONE_DAY = 86400;
-	var _closeEvent = 'ontouchstart' in document ? 'touchstart' : 'mousedown';
 	var _defaults =	{
 		className: null,
 		minTime: null,
@@ -38,7 +37,6 @@ requires jQuery 1.7+
 		hr: 'hr',
 		hrs: 'hrs'
 	};
-	var globalInit = false;
 
 	var methods =
 	{
@@ -50,7 +48,6 @@ requires jQuery 1.7+
 
 				// convert dropdowns to text input
 				if (self[0].tagName == 'SELECT') {
-					var input = $('<input />');
 					var attrs = { 'type': 'text', 'value': self.val() };
 					var raw_attrs = self[0].attributes;
 
@@ -58,7 +55,7 @@ requires jQuery 1.7+
 						attrs[raw_attrs[i].nodeName] = raw_attrs[i].nodeValue;
 					}
 
-					input.attr(attrs);
+					var input = $('<input />', attrs);
 					self.replaceWith(input);
 					self = input;
 				}
@@ -86,25 +83,13 @@ requires jQuery 1.7+
 				}
 
 				self.data('timepicker-settings', settings);
-				self.attr('autocomplete', 'off');
+				self.prop('autocomplete', 'off');
 				self.on('click.timepicker focus.timepicker', methods.show);
 				self.on('blur.timepicker', _formatValue);
 				self.on('keydown.timepicker', _keyhandler);
 				self.addClass('ui-timepicker-input');
 
 				_formatValue.call(self.get(0));
-
-				if (!globalInit) {
-					// close the dropdown when container loses focus
-					$('body').on(_closeEvent, function(e) {
-						var target = $(e.target);
-						var input = target.closest('.ui-timepicker-input');
-						if (input.length === 0 && target.closest('.ui-timepicker-list').length === 0) {
-							methods.hide();
-						}
-					});
-					globalInit = true;
-				}
 			});
 		},
 
@@ -120,7 +105,7 @@ requires jQuery 1.7+
 			var list = self.data('timepicker-list');
 
 			// check if input is readonly
-			if (self.attr('readonly')) {
+			if (self.prop('readonly')) {
 				return;
 			}
 
@@ -174,6 +159,8 @@ requires jQuery 1.7+
 			} else {
 				list.scrollTop(0);
 			}
+
+			_attachCloseHandler();
 
 			self.trigger('showTimepicker');
 		},
@@ -283,9 +270,11 @@ requires jQuery 1.7+
 			self.data('timepicker-list', false);
 		}
 
-		list = $('<ul />');
-		list.attr('tabindex', -1);
-		list.addClass('ui-timepicker-list');
+		list = $('<ul />', {
+			'tabindex': -1,
+			'class': 'ui-timepicker-list'
+		});
+
 		if (settings.className) {
 			list.addClass(settings.className);
 		}
@@ -354,6 +343,29 @@ requires jQuery 1.7+
 		var _baseDateTimezoneOffset = _baseDate.getTimezoneOffset()*60000;
 
 		return new Date(_baseDate.valueOf() - _baseDateTimezoneOffset + _currentTimezoneOffset);
+	}
+
+	function _attachCloseHandler()
+	{
+		if ('ontouchstart' in document) {
+			$('body').on('touchstart.ui-timepicker', _closeHandler);
+		} else {
+			$('body').on('mousedown.ui-timepicker', _closeHandler);
+			$(window).on('scroll.ui-timepicker', _closeHandler);
+		}
+	}
+
+	// event handler to decide whether to close timepicker
+	function _closeHandler(e)
+	{
+		var target = $(e.target);
+		var input = target.closest('.ui-timepicker-input');
+		if (input.length === 0 && target.closest('.ui-timepicker-list').length === 0) {
+			methods.hide();
+		}
+
+		$('body').unbind('.ui-timepicker');
+		$(window).unbind('.ui-timepicker');
 	}
 
 	function _findRow(self, list, value)
@@ -541,7 +553,7 @@ requires jQuery 1.7+
 
 		if (timeValue !== null) {
 			var timeString = _int2time(timeValue, settings.timeFormat);
-			self.attr('value', timeString);
+			self.val(timeString);
 		}
 
 		self.trigger('change').trigger('changeTime');
