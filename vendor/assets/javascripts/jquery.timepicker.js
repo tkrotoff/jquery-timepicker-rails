@@ -28,6 +28,7 @@ requires jQuery 1.7+
 		scrollDefaultNow: false,
 		scrollDefaultTime: false,
 		selectOnBlur: false,
+		disableTouchKeyboard: true,
 		forceRoundTime: false,
 		appendTo: 'body'
 	};
@@ -96,8 +97,9 @@ requires jQuery 1.7+
 		show: function(e)
 		{
 			var self = $(this);
+			var settings = self.data('timepicker-settings');
 
-			if ('ontouchstart' in document) {
+			if ('ontouchstart' in document && settings.disableTouchKeyboard) {
 				// block the keyboard on mobile devices
 				self.blur();
 			}
@@ -139,7 +141,6 @@ requires jQuery 1.7+
 
 			list.show();
 
-			var settings = self.data('timepicker-settings');
 			// position scrolling
 			var selected = list.find('.ui-timepicker-selected');
 
@@ -362,10 +363,9 @@ requires jQuery 1.7+
 		var input = target.closest('.ui-timepicker-input');
 		if (input.length === 0 && target.closest('.ui-timepicker-list').length === 0) {
 			methods.hide();
+			$('body').unbind('.ui-timepicker');
+			$(window).unbind('.ui-timepicker');
 		}
-
-		$('body').unbind('.ui-timepicker');
-		$(window).unbind('.ui-timepicker');
 	}
 
 	function _findRow(self, list, value)
@@ -652,14 +652,24 @@ requires jQuery 1.7+
 		}
 
 		var d = new Date(0);
-		var time = timeString.toLowerCase().match(/(\d{1,2})(?::(\d{1,2}))?(?::(\d{2}))?\s*([pa]?)/);
+
+		var timeRegex;
+		if (timeString.indexOf(":") !== -1) {
+			//colon-delimited version
+			timeRegex = /(\d{1,2})(?::(\d{1,2}))?(?::(\d{2}))?\s*([pa]?)/;
+		} else {
+			//zero-required, fixed-position version
+			timeRegex = /^([0-2][0-9]):?([0-5][0-9])?:?([0-5][0-9])?\s*([pa]?)$/;
+		}
+
+		var time = timeString.toLowerCase().match(timeRegex);
 
 		if (!time) {
 			return null;
 		}
 
 		var hour = parseInt(time[1]*1, 10);
-        var hours;
+		var hours;
 
 		if (time[4]) {
 			if (hour == 12) {
