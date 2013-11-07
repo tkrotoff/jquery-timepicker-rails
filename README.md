@@ -1,3 +1,5 @@
+**I will not continue to maintain this gem as I don't use Rails asset pipeline anymore, if you are interested, [contact me](mailto:tkrotoff@gmail.com).**
+
 # jQuery timepicker for Rails
 
 jquery-timepicker packaged for the Rails 3.1+ asset pipeline.
