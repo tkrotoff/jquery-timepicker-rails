@@ -1,4 +1,4 @@
-**I will not continue to maintain this gem as I don't use Rails asset pipeline anymore, if you are interested, [contact me](mailto:tkrotoff@gmail.com).**
+**This repository is not maintained anymore, use this fork instead: https://github.com/cover/jquery-timepicker-rails**
 
 # jQuery timepicker for Rails
 
